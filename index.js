@@ -26,7 +26,7 @@ mongoose.connect(process.env.mongoURI).then(() => {
     console.log(e);
 });
 app.get("/", (req, res) => {
-    res.end("server is running /n API is running on /api")
+    res.end("server is running on https://task2-front-end.vercel.app/")
 })
 app.use("/api", apiRoutes)
 app.use(express.static(path.join(__dirname, 'uploads')));
