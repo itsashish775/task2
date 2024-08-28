@@ -162,17 +162,20 @@ const publicController = {
     listing: async (req, res) => {
         try {
 
-            let data = await User.find()
             const fullData = await User.aggregate([
                 {
-                    $lookup: {
-                        from: 'videos', // Name of the collection to join with
-                        localField: '_id', // Field from the User collection
-                        foreignField: 'uploadedBy', // Field from the Videos collection
-                        as: 'videos' // The array field in the output documents
-                    }
+                  $lookup: {
+                    from: 'videos',
+                    let: { userId: '$_id' },
+                    pipeline: [
+                      { $match: { $expr: { $eq: ['$uploadedBy', '$$userId'] } } },
+                      { $sort: { createdAt: -1 } }, 
+                      { $limit: 5 } 
+                    ],
+                    as: 'videos'
+                  }
                 }
-            ]);
+              ]);
             res.status(200).json({ status: 200, message: "data fetched", data: fullData })
         } catch (error) {
 
