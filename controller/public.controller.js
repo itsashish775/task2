@@ -58,10 +58,12 @@ const publicController = {
         try {
             let id = req.body.id
             let userDetails = await User.findById(id);
+            let videos = await Video.find({ uploadedBy: id });
             res.status(200).json({
                 status: 200,
                 message: "data fetched",
-                data: userDetails
+                data: userDetails,
+                videos
             })
         } catch (error) {
             res.status(500).json({
